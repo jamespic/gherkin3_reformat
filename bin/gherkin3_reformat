@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+require 'gherkin3_reformat'
+
+puts Gherkin3Reformat.format_file(ARGV[0])
