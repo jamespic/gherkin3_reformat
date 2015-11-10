@@ -1,5 +1,26 @@
 #!/usr/bin/env ruby
-
 require 'gherkin3_reformat'
+require 'optparse'
 
-puts Gherkin3Reformat.format_file(ARGV[0])
+options = {}
+OptionParser.new do |opts|
+  opts.banner = "Usage: gherkin3_reformat [options] filenames"
+
+  opts.on("-r", "--[no-]replace", "Replace original files") do |r|
+    options[:replace] = r
+  end
+end.parse!
+
+ARGV.each do |filename|
+  begin
+    output = Gherkin3Reformat.format_file(filename)
+    if options[:replace] then
+      File.write(filename, output)
+    else
+      puts output
+    end
+  rescue => e
+    STDERR.puts "Error formatting #{filename}: #{e}"
+    STDERR.puts e.backtrace.join("\n")
+  end
+end
